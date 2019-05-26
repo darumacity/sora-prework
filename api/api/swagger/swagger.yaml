@@ -1,0 +1,65 @@
+swagger: "2.0"
+info:
+  version: "0.0.1"
+  title: Sora Prework App
+# during dev, should point to your local machine
+host: localhost:10010
+# basePath prefixes all resource paths 
+basePath: /
+# 
+schemes:
+  # tip: remove http to make production-grade
+  - http
+# format of bodies a client can send (Content-Type)
+consumes:
+  - application/json
+# format of the responses to the client (Accepts)
+produces:
+  - application/json
+paths:
+  /hotels/prices/average:
+    # binds a127 app logic to a route
+    x-swagger-router-controller: hotels
+    get:
+      description: Returns averages to the caller
+      # used as the method name of the controller
+      operationId: averagePrices
+      tags:
+        - hotels
+      parameters:
+        - name: targetMonth
+          in: query
+          description: The year and month
+          required: true
+          type: integer
+      responses:
+        "200":
+          description: Success
+          schema:
+            type: array
+            items:
+              $ref: "#/definitions/HotelPriceAverageResponse"
+        # responses may fall through to errors
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+  /swagger:
+    x-swagger-pipe: swagger_raw
+# complex objects have schema definitions
+definitions:
+  HotelPriceAverageResponse:
+    required:
+      - hotelName
+      - average
+    properties:
+      hotelName:
+        type: string
+      average:
+        type: number
+  ErrorResponse:
+    required:
+      - message
+    properties:
+      message:
+        type: string
