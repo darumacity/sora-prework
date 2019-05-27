@@ -52,11 +52,14 @@ definitions:
     required:
       - hotelName
       - planName
+      - planDetail
       - average
     properties:
       hotelName:
         type: string
       planName:
+        type: string
+      planDetail:
         type: string
       average:
         type: number

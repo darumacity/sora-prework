@@ -112,6 +112,12 @@ export interface HotelPriceAverageResponse {
     planName: string;
     /**
      * 
+     * @type {string}
+     * @memberof HotelPriceAverageResponse
+     */
+    planDetail: string;
+    /**
+     * 
      * @type {number}
      * @memberof HotelPriceAverageResponse
      */

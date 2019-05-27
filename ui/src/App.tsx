@@ -43,6 +43,7 @@ class App extends React.Component<Props, State> {
               <tr key={index}>
                 <td>{average.hotelName}</td>
                 <td>{average.planName}</td>
+                <td>{average.planDetail}</td>
                 <td>{average.average.toFixed(4)}</td>
               </tr>
             )}

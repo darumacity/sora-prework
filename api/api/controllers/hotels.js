@@ -8,11 +8,12 @@ module.exports.averagePricesPerPlan = (req, res) => {
     return hotel.plans.map(plan => {
       const prices = plan.prices;
       const totalPrice = Object.keys(prices).reduce((prev, current) => prev + prices[current], 0);
-      const average = (totalPrice / Object.keys(prices).length);
+      const average = Object.keys(prices).length > 0 ? (totalPrice / Object.keys(prices).length) : 0;
 
       return {
         hotelName: hotel.hotelName,
         planName: plan.planName,
+        planDetail: plan.planDetail,
         average: average,
       }
     })
