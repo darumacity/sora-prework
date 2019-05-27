@@ -15,20 +15,34 @@ module.exports.crawl = () => {
             }),
         };
     });
+
+    /* return getPlans().map(plan => {
+        return {
+            hotelName: plan.hotelName,
+            planName: plan.planName,
+            planDetail: plan.planDetail,
+            prices: getPrices(plan.url),
+        };
+    }); */
 }
 
 function getHotels() {
-    // const response = client.fetchSync('https://github.com/darumacity');
+    const response = client.fetchSync('https://www.jalan.net/130000/LRG_136200/?dateUndecided=1&adultNum=1&roomSingle=1&kenCd=130000&lrgCd=136200&screenId=UWW1402');
 
-    // if (response.error || !response.response || response.response.statusCode !== 200) {
-    //     throw response.error;
-    // }
+    if (response.error || !response.response || response.response.statusCode !== 200) {
+        throw response.error;
+    }
 
-    // var items = response.$('.pinned-items-list .pinned-item-list-item');
+    var hotels = [];
 
-    return [
-        { name: '亀島川温泉　新川の湯　ドーミーイン東京八丁堀', yadNo: '312600' },
-    ]
+    response.$('div.search-result-cassette').each(function () {
+        var name = response.$(this).find('div.result-body div.hotel-detail div.hotel-detail-header a').text().trim();
+        var yadNo = response.$(this).attr('id').replace('yadNo', '').trim();
+
+        hotels.push({ name, yadNo });
+    })
+
+    return hotels;
 }
 
 function getPlans(yadNo) {
@@ -40,12 +54,12 @@ function getPlans(yadNo) {
 
     var plans = [];
 
-    response.$('div.detail-cassette').each(function () {
+    response.$('div.detail-cassette').slice(0, 1).each(function () {
         var planName = response.$(this).find('div.detail-header h2').text().trim();
 
-        response.$(this).find('a.detailPlanName').each(function () {
+        response.$(this).find('a.detailPlanName').slice(0, 1).each(function () {
             var $this = response.$(this);
-            plans.push({ 
+            plans.push({
                 name: planName,
                 detail: $this.text().trim(),
                 url: $this.attr('href'),
@@ -55,6 +69,32 @@ function getPlans(yadNo) {
 
     return plans;
 }
+
+/* function getPlans() {
+    const response = client.fetchSync('https://www.jalan.net/130000/LRG_136200/?dateUndecided=1&kenCd=130000&mvTabFlg=2');
+
+    console.log(response.response.request.uri.href);
+    console.log(response.body.indexOf('注目プランのある宿 [PR]'));
+    if (response.error || !response.response || response.response.statusCode !== 200) {
+        throw response.error;
+    }
+
+    var plans = [];
+
+    response.$('div.search-result-cassette').each(function () {
+        var $anchorToHotel = response.$(this).find('div.result-header td');
+        var $anchorToPlan = response.$(this).find('div.result-body a');
+
+        plans.push({
+            hotelName: $anchorToHotel.text().trim(),
+            planName: $anchorToPlan.text().trim(),
+            planDetail: '',
+            url: $anchorToPlan.attr('href'),
+        });
+    })
+
+    return plans;
+} */
 
 function getPrices(url) {
     const response = client.fetchSync(`https://www.jalan.net${url}&calYear=2019&calMonth=07`);
