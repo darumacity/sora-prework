@@ -6,7 +6,7 @@ interface Props { }
 
 interface State {
   isLoading: boolean;
-  hotelAverages: api.HotelPriceAverageResponse[];
+  averages: api.HotelPriceAverageResponse[];
 }
 
 class App extends React.Component<Props, State> {
@@ -15,17 +15,17 @@ class App extends React.Component<Props, State> {
     super(props);
     this.state = {
       isLoading: false,
-      hotelAverages: [],
+      averages: [],
     }
   }
 
   onClick = () => {
-    this.setState({ isLoading: true, hotelAverages: [] });
+    this.setState({ isLoading: true, averages: [] });
 
     const hotelsApi = new api.HotelsApi();
-    hotelsApi.averagePrices(201907)
+    hotelsApi.averagePricesPerPlan(201907)
       .then(response => {
-        this.setState({ hotelAverages: response });
+        this.setState({ averages: response });
       })
       .finally(() => {
         this.setState({ isLoading: false });
@@ -39,8 +39,12 @@ class App extends React.Component<Props, State> {
         <div>{this.state.isLoading && 'loading'}</div>
         <table>
           <tbody>
-            {this.state.hotelAverages.map((hotelAverage, index) =>
-              <tr key={index}><td>{hotelAverage.hotelName}</td><td>{hotelAverage.average.toFixed(4)}</td></tr>
+            {this.state.averages.map((average, index) =>
+              <tr key={index}>
+                <td>{average.hotelName}</td>
+                <td>{average.planName}</td>
+                <td>{average.average.toFixed(4)}</td>
+              </tr>
             )}
           </tbody>
         </table>

@@ -106,6 +106,12 @@ export interface HotelPriceAverageResponse {
     hotelName: string;
     /**
      * 
+     * @type {string}
+     * @memberof HotelPriceAverageResponse
+     */
+    planName: string;
+    /**
+     * 
      * @type {number}
      * @memberof HotelPriceAverageResponse
      */
@@ -125,12 +131,12 @@ export const HotelsApiFetchParamCreator = function (configuration?: Configuratio
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        averagePrices(targetMonth: number, options: any = {}): FetchArgs {
+        averagePricesPerPlan(targetMonth: number, options: any = {}): FetchArgs {
             // verify required parameter 'targetMonth' is not null or undefined
             if (targetMonth === null || targetMonth === undefined) {
-                throw new RequiredError('targetMonth','Required parameter targetMonth was null or undefined when calling averagePrices.');
+                throw new RequiredError('targetMonth','Required parameter targetMonth was null or undefined when calling averagePricesPerPlan.');
             }
-            const localVarPath = `/hotels/prices/average`;
+            const localVarPath = `/hotels/plans/prices/average`;
             const localVarUrlObj = url.parse(localVarPath, true);
             const localVarRequestOptions = Object.assign({ method: 'GET' }, options);
             const localVarHeaderParameter = {} as any;
@@ -165,8 +171,8 @@ export const HotelsApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        averagePrices(targetMonth: number, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<Array<HotelPriceAverageResponse>> {
-            const localVarFetchArgs = HotelsApiFetchParamCreator(configuration).averagePrices(targetMonth, options);
+        averagePricesPerPlan(targetMonth: number, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<Array<HotelPriceAverageResponse>> {
+            const localVarFetchArgs = HotelsApiFetchParamCreator(configuration).averagePricesPerPlan(targetMonth, options);
             return (fetch: FetchAPI = portableFetch, basePath: string = BASE_PATH) => {
                 return fetch(basePath + localVarFetchArgs.url, localVarFetchArgs.options).then((response) => {
                     if (response.status >= 200 && response.status < 300) {
@@ -192,8 +198,8 @@ export const HotelsApiFactory = function (configuration?: Configuration, fetch?:
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        averagePrices(targetMonth: number, options?: any) {
-            return HotelsApiFp(configuration).averagePrices(targetMonth, options)(fetch, basePath);
+        averagePricesPerPlan(targetMonth: number, options?: any) {
+            return HotelsApiFp(configuration).averagePricesPerPlan(targetMonth, options)(fetch, basePath);
         },
     };
 };
@@ -212,8 +218,8 @@ export class HotelsApi extends BaseAPI {
      * @throws {RequiredError}
      * @memberof HotelsApi
      */
-    public averagePrices(targetMonth: number, options?: any) {
-        return HotelsApiFp(this.configuration).averagePrices(targetMonth, options)(this.fetch, this.basePath);
+    public averagePricesPerPlan(targetMonth: number, options?: any) {
+        return HotelsApiFp(this.configuration).averagePricesPerPlan(targetMonth, options)(this.fetch, this.basePath);
     }
 
 }
