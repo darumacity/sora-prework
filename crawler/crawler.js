@@ -9,6 +9,7 @@ module.exports.crawl = () => {
             plans: getPlans(hotel.yadNo).map(plan => {
                 return {
                     planName: plan.name,
+                    planDetail: plan.detail,
                     prices: getPrices(plan.url),
                 };
             }),
