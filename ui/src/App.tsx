@@ -6,6 +6,7 @@ interface Props { }
 
 interface State {
   isLoading: boolean;
+  hasError: boolean;
   averages: api.HotelPriceAverageResponse[];
 }
 
@@ -15,17 +16,21 @@ class App extends React.Component<Props, State> {
     super(props);
     this.state = {
       isLoading: false,
+      hasError: false,
       averages: [],
     }
   }
 
   onClick = () => {
-    this.setState({ isLoading: true, averages: [] });
+    this.setState({ isLoading: true, hasError: false, averages: [] });
 
     const hotelsApi = new api.HotelsApi();
     hotelsApi.averagePricesPerPlan(201907)
       .then(response => {
         this.setState({ averages: response });
+      })
+      .catch(reason => {
+        this.setState({ hasError: true });
       })
       .finally(() => {
         this.setState({ isLoading: false });
@@ -35,8 +40,9 @@ class App extends React.Component<Props, State> {
   render() {
     return (
       <div className="App">
-        <button onClick={this.onClick}>test</button>
+        <button onClick={this.onClick}>go</button>
         <div>{this.state.isLoading && 'loading'}</div>
+        <div>{this.state.hasError && 'error'}</div>
         <table>
           <tbody>
             {this.state.averages.map((average, index) =>
@@ -44,7 +50,7 @@ class App extends React.Component<Props, State> {
                 <td>{average.hotelName}</td>
                 <td>{average.planName}</td>
                 <td>{average.planDetail}</td>
-                <td>{average.average.toFixed(4)}</td>
+                <td className="td-number">{average.average.toFixed(4)}</td>
               </tr>
             )}
           </tbody>
