@@ -13,6 +13,7 @@ SwaggerExpress.create(config, function(err, swaggerExpress) {
 
   // install middleware
   swaggerExpress.register(app);
+  app.use(swaggerExpress.runner.swaggerTools.swaggerUi());
 
   var port = process.env.PORT || 10010;
   app.listen(port);
